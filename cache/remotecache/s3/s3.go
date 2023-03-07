@@ -358,9 +358,11 @@ func newS3Client(ctx context.Context, config Config) (*s3Client, error) {
 		return nil, errors.Errorf("Unable to load AWS SDK config, %v", err)
 	}
 	client := s3.NewFromConfig(cfg, func(options *s3.Options) {
-		if config.AccessKeyID != "" && config.SecretAccessKey != "" {
-			options.Credentials = credentials.NewStaticCredentialsProvider(config.AccessKeyID, config.SecretAccessKey, config.SessionToken)
-		}
+    if config.AccessKeyID != "" && config.SecretAccessKey != "" {
+		  options.Credentials = credentials.NewStaticCredentialsProvider(config.AccessKeyID, config.SecretAccessKey, config.SessionToken)
+    } else {
+      options.Credentials = nil
+    }
 		if config.EndpointURL != "" {
 			options.UsePathStyle = config.UsePathStyle
 			options.EndpointResolver = s3.EndpointResolverFromURL(config.EndpointURL)
